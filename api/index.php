@@ -1,5 +1,18 @@
 <?php
 
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = require __DIR__ . '/../bootstrap/app.php';
+
+if (! $app->bound('view')) {
+    http_response_code(500);
+    echo 'VIEW_NOT_BOUND';
+    exit;
+}
+
+echo 'VIEW_BOUND';
+exit;
+
 $uri = urldecode(
     parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? ''
 );
