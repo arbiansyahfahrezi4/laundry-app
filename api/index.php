@@ -1,17 +1,26 @@
 <?php
 
-use Illuminate\Http\Request;
+$uri = urldecode(
+    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? ''
+);
 
-require __DIR__ . '/../vendor/autoload.php';
+$publicPath = __DIR__ . '/../public' . $uri;
 
-$app = require __DIR__ . '/../bootstrap/app.php';
+if ($uri !== '/' && file_exists($publicPath) && !is_dir($publicPath)) {
+    $mimeType = match (pathinfo($publicPath, PATHINFO_EXTENSION)) {
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'png' => 'image/png',
+        'jpg', 'jpeg' => 'image/jpeg',
+        'svg' => 'image/svg+xml',
+        'ico' => 'image/x-icon',
+        default => mime_content_type($publicPath) ?: 'text/plain',
+    };
 
-try {
-    $app->handleRequest(Request::capture());
-} catch (Throwable $e) {
-    error_log('VERCEL_LARAVEL_ERROR: ' . $e->__toString());
-
-    http_response_code(500);
-    header('Content-Type: text/plain');
-    echo $e->getMessage();
+    header("Content-Type: {$mimeType}");
+    header('Cache-Control: public, max-age=31536000');
+    readfile($publicPath);
+    exit;
 }
+
+require __DIR__ . '/../public/index.php';
