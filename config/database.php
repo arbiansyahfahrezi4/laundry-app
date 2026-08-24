@@ -47,12 +47,21 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+
+            /*
+            |--------------------------------------------------------------------------
+            | MySQL SSL
+            |--------------------------------------------------------------------------
+            */
+
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA') ? (
-                    file_exists(base_path(env('MYSQL_ATTR_SSL_CA'))) 
-                        ? base_path(env('MYSQL_ATTR_SSL_CA')) 
-                        : env('MYSQL_ATTR_SSL_CA')
-                ) : null,
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA')
+                    ? (
+                        file_exists(base_path(env('MYSQL_ATTR_SSL_CA')))
+                            ? base_path(env('MYSQL_ATTR_SSL_CA'))
+                            : env('MYSQL_ATTR_SSL_CA')
+                    )
+                    : null,
             ]) : [],
         ],
 
@@ -71,12 +80,15 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA') ? (
-                    file_exists(base_path(env('MYSQL_ATTR_SSL_CA'))) 
-                        ? base_path(env('MYSQL_ATTR_SSL_CA')) 
-                        : env('MYSQL_ATTR_SSL_CA')
-                ) : null,
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA')
+                    ? (
+                        file_exists(base_path(env('MYSQL_ATTR_SSL_CA')))
+                            ? base_path(env('MYSQL_ATTR_SSL_CA'))
+                            : env('MYSQL_ATTR_SSL_CA')
+                    )
+                    : null,
             ]) : [],
         ],
 
@@ -105,7 +117,6 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
-            'prefix_indexes' => true,
         ],
 
     ],
@@ -133,7 +144,10 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env(
+                'REDIS_PREFIX',
+                Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'
+            ),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
